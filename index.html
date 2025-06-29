@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIVA OS - The Future of Biological Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "AIVA OS",
+      "operatingSystem": "Cloud-native",
+      "applicationCategory": "HealthApplication",
+      "description": "AIVA OS is the world's first real-time biological intelligence system, simulating internal health states using causal AI.",
+      "url": "https://aivaos.com",
+      "creator": {
+        "@type": "Organization",
+        "name": "AIVA Intelligence"
+      }
+    }
+    </script>
+    <style>
+        :root {
+            --background-color: #000000;
+            --background-color-rgb: 0, 0, 0;
+            --surface-color: #0A0A0A;
+            --text-color: #EAECEF;
+            --text-muted-color: #8A919E;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-color: #00A3FF;
+            --accent-color-rgb: 0, 163, 255;
+            --accent-glow: 0px 0px 30px rgba(0, 163, 255, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        #hero-container {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 0;
+        }
+        #hero-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .hero-text-content {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        .scroll-content {
+            position: relative;
+            z-index: 5;
+            background: linear-gradient(to bottom, transparent 0%, var(--background-color) 200px);
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            background: -webkit-linear-gradient(45deg, #FFF, #AAA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+             color: var(--text-muted-color);
+             font-size: clamp(1.1rem, 2vw, 1.25rem);
+             max-width: 720px;
+             margin-left: auto;
+             margin-right: auto;
+             line-height: 1.6;
+        }
+        
+        .accent-text {
+            color: var(--accent-color);
+        }
+
+        .cta-button {
+            background: var(--accent-color);
+            color: #000;
+            padding: 16px 32px;
+            border-radius: 9999px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 163, 255, 0.3);
+            letter-spacing: 0.02em;
+        }
+        .cta-button:hover {
+            background: #38B6FF;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 163, 255, 0.5);
+        }
+        
+        .header {
+            background: rgba(var(--background-color-rgb), 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Card styles */
+        .info-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .info-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(var(--accent-color-rgb), 0.1), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .info-card:hover:before {
+            opacity: 1;
+        }
+        .info-card:hover {
+            border-color: rgba(var(--accent-color-rgb), 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .stat-card {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 24px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        .stat-card:hover {
+            background-color: rgba(var(--accent-color-rgb), 0.05);
+            border-color: var(--accent-color);
+            transform: scale(1.03);
+        }
+        
+        .disease-card {
+            background-color: rgba(var(--accent-color-rgb), 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1/1;
+            padding: 1rem;
+        }
+        .disease-card:hover {
+            background-color: rgba(var(--accent-color-rgb), 0.1);
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+        
+        .gradient-border-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 25px; 
+            padding: 1px; 
+            background:linear-gradient(45deg, var(--border-color), var(--accent-color)); 
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+                    mask-composite: exclude; 
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 0 40px;
+            margin-bottom: 50px;
+        }
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 60px;
+            text-align: right;
+        }
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 60px;
+        }
+        .timeline-dot {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--background-color);
+            border: 4px solid var(--accent-color);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        .timeline-item:nth-child(odd) .timeline-dot {
+            right: -10px;
+        }
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -10px;
+        }
+        .timeline-content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        [data-aos] {
+            pointer-events: none;
+        }
+        .aos-animate {
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="header fixed top-0 left-0 right-0 z-50 border-b border-white/10">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h1 class="text-xl font-bold text-white">AIVA <span class="font-light">OS</span></h1>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#problem" class="text-gray-300 hover:text-white transition">The Crisis</a>
+                <a href="#solution" class="text-gray-300 hover:text-white transition">The Bio-OS</a>
+                <a href="#lab" class="text-gray-300 hover:text-white transition">The Lab</a>
+                <a href="#doctor" class="text-gray-300 hover:text-white transition">Doctor Companion</a>
+                <a href="#features" class="text-gray-300 hover:text-white transition">Platform</a>
+                <a href="#intelligence" class="text-gray-300 hover:text-white transition">Intelligence</a>
+                <a href="#management" class="text-gray-300 hover:text-white transition">Management</a>
+            </nav>
+            <a href="#contact" class="hidden md:inline-block bg-white text-black text-sm font-bold py-2 px-5 rounded-full hover:bg-gray-200 transition">Join Waitlist</a>
+             <button class="md:hidden text-white">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div id="hero-container">
+            <canvas id="hero-canvas"></canvas>
+        </div>
+        
+        <div class="hero-text-content px-6">
+            <h1 class="text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter text-white leading-tight mb-4" data-aos="fade-up">
+                A new view of <span class="accent-text">you.</span>
+            </h1>
+            <p class="max-w-3xl mx-auto text-lg md:text-xl text-gray-300 mb-8" data-aos="fade-up" data-aos-delay="100">
+                AIVA OS is the world's first real-time interface to human biology. Move beyond static reports and correlational guesswork. See, simulate, and modulate your health with a new class of causal intelligence.
+            </p>
+            <div data-aos="fade-up" data-aos-delay="200">
+                <a href="#solution" class="cta-button">
+                    Discover Your Bio-OS
+                </a>
+            </div>
+        </div>
+
+        <div class="scroll-content mt-[100vh]">
+            <!-- Section 1: The Problem -->
+            <section id="problem" class="pt-24 lg:pt-40 pb-12 lg:pb-20">
+                <div class="container mx-auto px-6 text-center">
+                    <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4" data-aos="fade-up">The Systemic Failure</p>
+                    <h2 class="section-title text-white mb-6" data-aos="fade-up" data-aos-delay="100">Healthcare is Operating Blind.</h2>
+                    <p class="section-subtitle mb-16" data-aos="fade-up" data-aos-delay="200">
+                        The 20th-century model of medicine was architected for acute, single-cause diseases. It's collapsing under the weight of chronic, multi-factorial conditions. This isn't just a clinical failure; it's an economic crisis demanding new, intelligent infrastructure that closes the profound "actionability gap" between raw data and causal understanding.
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div class="stat-card p-8 text-left" data-aos="fade-up" data-aos-delay="300">
+                            <p class="text-6xl font-bold mb-2 accent-text">90%</p>
+                            <h3 class="text-white text-lg font-semibold mb-2">of Chronic Disease Costs</h3>
+                            <p class="text-gray-400 text-base">driven by conditions like metabolic syndrome and autoimmune disorders that the current system is ill-equipped to handle.</p>
+                        </div>
+                        <div class="stat-card p-8 text-left" data-aos="fade-up" data-aos-delay="400">
+                            <p class="text-6xl font-bold mb-2 accent-text">$4.1T</p>
+                            <h3 class="text-white text-lg font-semibold mb-2">Annual Health Spending (US)</h3>
+                            <p class="text-gray-400 text-base">A financially unsustainable trajectory, indicating a structural deficit in the healthcare model, not just a cyclical downturn.</p>
+                        </div>
+                        <div class="stat-card p-8 text-left" data-aos="fade-up" data-aos-delay="500">
+                            <p class="text-6xl font-bold mb-2 accent-text">1</p>
+                            <h3 class="text-white text-lg font-semibold mb-2">Isolated Frame of Data</h3>
+                            <p class="text-gray-400 text-base">Existing tools (EHRs, apps) provide static snapshots, like seeing one frame of a movie. They generate data without causal interpretation.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: The Solution (Bio-OS) -->
+            <section id="solution" class="pt-12 lg:pt-20 pb-24 lg:pb-40 bg-black">
+                <div class="container mx-auto px-6">
+                    <div class="text-center">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4" data-aos="fade-up">The Bio-OS</p>
+                        <h2 class="section-title text-white mb-6" data-aos="fade-up" data-aos-delay="100">Your Body is an Operating System.</h2>
+                        <p class="section-subtitle mb-20" data-aos="fade-up" data-aos-delay="200">
+                        The term "Biological Operating System" is not a marketing metaphor; it is a precise mechanistic definition for a new class of computational architecture, designed to translate the high-dimensional data of your biology into a tangible, interactive, and actionable interface.
+                        </p>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-16 items-center">
+                        <div class="space-y-8">
+                            <div class="flex items-start gap-6" data-aos="fade-right" data-aos-delay="300">
+                                <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 mt-1 rounded-full bg-blue-900/50 border border-blue-500/50"><i data-lucide="scan-line" class="w-6 h-6 accent-text"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Human Genome as the BIOS</h3>
+                                    <p class="text-gray-400">Your foundational genetic sequence is the unchangeable 'hardware' configuration—the blueprint upon which all dynamic biological processes execute.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-6" data-aos="fade-right" data-aos-delay="400">
+                                <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 mt-1 rounded-full bg-blue-900/50 border border-blue-500/50"><i data-lucide="webhook" class="w-6 h-6 accent-text"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Biological Signals as System Calls</h3>
+                                    <p class="text-gray-400">Real-time data like beat-to-beat heart rate intervals are treated as high-frequency "system calls"—the interrupts that trigger computational processes within the OS.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-6" data-aos="fade-right" data-aos-delay="500">
+                                <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 mt-1 rounded-full bg-blue-900/50 border border-blue-500/50"><i data-lucide="cpu" class="w-6 h-6 accent-text"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Biochemical Pathways as Computation Graphs</h3>
+                                    <p class="text-gray-400">Complex pathways (e.g., inflammation, insulin signaling) are modeled as computation graphs where molecules are nodes and interactions are edges, native to our AI models.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative gradient-border-box p-12 h-full flex flex-col justify-center items-center text-center" data-aos="zoom-in-up">
+                             <div class="flex items-center justify-center w-20 h-20 mx-auto mb-6 rounded-full" style="background-color: rgba(0, 163, 255, 0.1);"><i data-lucide="orbit" class="w-10 h-10 accent-text"></i></div>
+                            <h3 class="text-3xl font-bold text-white mb-4">Your Twin. Online.</h3>
+                            <p class="text-gray-300 text-lg">A live, adaptive digital mirror of your internal biology, continuously synchronizing with your physical self to become your predictive simulation core.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 3: AIVA Lab -->
+            <section id="lab" class="py-24 lg:py-40">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4" data-aos="fade-up">The Physical-Digital Bridge</p>
+                        <h2 class="section-title text-white mb-6" data-aos="fade-up" data-aos-delay="100">The AIVA Lab: Calibrating the Twin</h2>
+                        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="200">
+                           High-fidelity data is the bedrock of a causal model. Our integrated lab capability provides the crucial ground-truth—the "Upload Path"—needed to anchor your digital twin in biological reality, moving beyond generic insights to true personalization.
+                        </p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div class="info-card p-8 text-center" data-aos="fade-up" data-aos-delay="300">
+                             <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-full" style="background-color: rgba(var(--accent-color-rgb), 0.1);"><i data-lucide="dna" class="w-8 h-8 accent-text"></i></div>
+                             <h3 class="text-xl font-bold text-white mb-2">Genomics</h3>
+                             <p class="text-gray-400">Mapping your genetic blueprint to understand inherent predispositions related to metabolism, nutrient processing, and more.</p>
+                        </div>
+                         <div class="info-card p-8 text-center" data-aos="fade-up" data-aos-delay="400">
+                             <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-full" style="background-color: rgba(var(--accent-color-rgb), 0.1);"><i data-lucide="flask-conical" class="w-8 h-8 accent-text"></i></div>
+                             <h3 class="text-xl font-bold text-white mb-2">Metabolomics</h3>
+                             <p class="text-gray-400">Providing a real-time chemical snapshot of your body's current state, reflecting the downstream effects of all upstream activity.</p>
+                        </div>
+                         <div class="info-card p-8 text-center" data-aos="fade-up" data-aos-delay="500">
+                             <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-full" style="background-color: rgba(var(--accent-color-rgb), 0.1);"><i data-lucide="bacteria" class="w-8 h-8 accent-text"></i></div>
+                             <h3 class="text-xl font-bold text-white mb-2">Microbiome</h3>
+                             <p class="text-gray-400">Analyzing the symbiotic ecosystem in your gut that causally influences digestion, immunity, and even your response to interventions.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 4: Doctor Companion -->
+            <section id="doctor" class="py-24 lg:py-40 bg-black">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20" data-aos="fade-up">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">Clinical Decision Support</p>
+                        <h2 class="section-title text-white mb-6">The Clinician's Co-pilot</h2>
+                        <p class="section-subtitle">
+                           AIVA OS is architected as a powerful Clinical Decision Support (CDS) platform, designed to empower and augment—not replace—the healthcare professional's expertise.
+                        </p>
+                    </div>
+                    <div class="grid lg:grid-cols-2 gap-16 items-center">
+                         <div class="relative h-full flex flex-col justify-center items-center text-center" data-aos="fade-right">
+                             <img src="https://placehold.co/600x600/0A0A0A/8A919E?text=Clinical+Interface" class="rounded-2xl" alt="AIVA OS Clinical Interface Mockup">
+                        </div>
+                        <div class="space-y-8" data-aos="fade-left">
+                            <div class="flex items-start gap-6">
+                                <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 mt-1 rounded-full bg-blue-900/50 border border-blue-500/50"><i data-lucide="brain-circuit" class="w-6 h-6 accent-text"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white mb-2">From "What" to "Why"</h3>
+                                    <p class="text-gray-400">Move beyond static EHR data. Receive mechanistic explanations and causal hypotheses for observed symptoms, enabling you to address root causes of complex chronic conditions.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-6">
+                                <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 mt-1 rounded-full bg-blue-900/50 border border-blue-500/50"><i data-lucide="shield-question" class="w-6 h-6 accent-text"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Quantified Uncertainty</h3>
+                                    <p class="text-gray-400">Our system provides not just a recommendation, but a "Physiological Confidence Score," mitigating automation bias and keeping you in control of the final clinical decision.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-6">
+                                <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 mt-1 rounded-full bg-blue-900/50 border border-blue-500/50"><i data-lucide="check-square" class="w-6 h-6 accent-text"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Regulatory-Ready Architecture</h3>
+                                    <p class="text-gray-400">Purpose-built to align with the FDA's criteria for non-device CDS software by providing a full evidentiary basis for every insight, ensuring clinical and regulatory trust.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 5: The Platform -->
+            <section id="features" class="py-24 lg:py-40">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20" data-aos="fade-up">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">The Platform Advantage</p>
+                        <h2 class="section-title text-white mb-6">A Software-Biology Hybrid Moat</h2>
+                        <p class="section-subtitle">
+                           Our competitive advantage is not a single feature, but a compounding, multi-layered system where each component reinforces the others, making the entire platform exponentially difficult to replicate.
+                        </p>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-8 items-start">
+                        <div class="info-card p-8 lg:p-12" data-aos="fade-right" data-aos-delay="200">
+                            <div class="flex items-center mb-4"><div class="p-3 rounded-full mr-4" style="background-color: rgba(0, 163, 255, 0.1);"><i data-lucide="atom" class="w-6 h-6 accent-text"></i></div><h3 class="text-2xl font-bold text-white">Causal AI Engine</h3></div>
+                            <p class="text-gray-400">While most "AI in health" only identifies associations, AIVA OS is designed to ascend Judea Pearl's Ladder of Causation. We move from seeing patterns to understanding cause-and-effect, enabling true biological engineering.</p>
+                        </div>
+                        <div class="info-card p-8 lg:p-12" data-aos="fade-left" data-aos-delay="300">
+                           <div class="flex items-center mb-4"><div class="p-3 rounded-full mr-4" style="background-color: rgba(0, 163, 255, 0.1);"><i data-lucide="copy" class="w-6 h-6 accent-text"></i></div><h3 class="text-2xl font-bold text-white">Human Digital Twin (HDT)</h3></div>
+                           <p class="text-gray-400">Your high-fidelity digital mirror functions as a dynamic, predictive simulation core. It allows for personalized "in-silico clinical trials" to test interventions virtually before applying them physically.</p>
+                        </div>
+                        <div class="info-card p-8 lg:p-12" data-aos="fade-right" data-aos-delay="400">
+                           <div class="flex items-center mb-4"><div class="p-3 rounded-full mr-4" style="background-color: rgba(0, 163, 255, 0.1);"><i data-lucide="shield-check" class="w-6 h-6 accent-text"></i></div><h3 class="text-2xl font-bold text-white">Unassailable Trust Moat</h3></div>
+                           <p class="text-gray-400">Your data sovereignty is our command. Using Privacy-by-Design, federated learning (FL), and zero-knowledge proofs (ZKPs), we turn privacy from an industry vulnerability into our greatest competitive advantage.</p>
+                        </div>
+                        <div class="info-card p-8 lg:p-12" data-aos="fade-left" data-aos-delay="500">
+                           <div class="flex items-center mb-4"><div class="p-3 rounded-full mr-4" style="background-color: rgba(0, 163, 255, 0.1);"><i data-lucide="layers" class="w-6 h-6 accent-text"></i></div><h3 class="text-2xl font-bold text-white">The "Every Omics Count" Doctrine</h3></div>
+                           <p class="text-gray-400">Health is an emergent property. We integrate Genomics, Transcriptomics, Proteomics, Metabolomics, and real-time signals into a "personal dense data cloud" because no single layer in isolation is sufficient.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 6: Intelligence Core -->
+            <section id="intelligence" class="py-24 lg:py-40 bg-black">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20" data-aos="fade-up">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">The Intelligence Core</p>
+                        <h2 class="section-title text-white mb-6">Hybrid AI for True Understanding</h2>
+                        <p class="section-subtitle">
+                           Our Neuro-Symbolic architecture represents the "third wave of AI," synergistically combining deep learning's pattern recognition with the explicit, logical reasoning of symbolic AI. This enables superior data efficiency and transparent, interpretable decision-making.
+                        </p>
+                    </div>
+                    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-10 items-start">
+                        <div data-aos="fade-right">
+                             <h3 class="text-2xl font-bold text-white mb-4">Neuro (Deep Learning)</h3>
+                             <p class="text-gray-400 mb-6">The "neuro" component excels at finding subtle patterns in high-dimensional, noisy data. We use:</p>
+                             <ul class="space-y-4">
+                                <li class="flex items-start gap-3"><i data-lucide="git-branch-plus" class="w-5 h-5 mt-1 accent-text"></i><span><strong class="text-white">Recursive GNNs</strong> to model the network structure of your biology.</span></li>
+                                <li class="flex items-start gap-3"><i data-lucide="area-chart" class="w-5 h-5 mt-1 accent-text"></i><span><strong class="text-white">Temporal RNNs</strong> to forecast time-dependent fluctuations like inflammatory trends.</span></li>
+                             </ul>
+                        </div>
+                        <div data-aos="fade-left">
+                            <h3 class="text-2xl font-bold text-white mb-4">Symbolic (Knowledge & Logic)</h3>
+                             <p class="text-gray-400 mb-6">The "symbolic" component provides the rules, relationships, and causal constraints. This is our:</p>
+                             <ul class="space-y-4">
+                                <li class="flex items-start gap-3"><i data-lucide="book-marked" class="w-5 h-5 mt-1 accent-text"></i><span><strong class="text-white">Ontology-Driven Data Fabric,</strong> a proprietary knowledge graph of biological cause-and-effect.</span></li>
+                                <li class="flex items-start gap-3"><i data-lucide="calculator" class="w-5 h-5 mt-1 accent-text"></i><span><strong class="text-white">Bayesian Simulators</strong> to manage uncertainty and update beliefs as new data arrives.</span></li>
+                             </ul>
+                        </div>
+                    </div>
+                     <div class="info-card max-w-4xl mx-auto mt-10 p-8" data-aos="fade-up">
+                        <h3 class="text-2xl font-bold text-white mb-4 text-center">Modeling Dynamic Reality</h3>
+                        <p class="text-gray-400 text-center max-w-2xl mx-auto">To handle the noisy, irregular time-series data from real-world sensors, we employ <strong class="text-white">Stochastic Differential Equations (SDEs)</strong>. They are uniquely suited to discover the governing dynamics of your physiology, creating a robust, continuous estimate of your state even with imperfect signals.</p>
+                     </div>
+                </div>
+            </section>
+            
+            <!-- Section 7: Health Management -->
+            <section id="management" class="py-24 lg:py-40">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16" data-aos="fade-up">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">Proactive Health Management</p>
+                        <h2 class="section-title text-white mb-6">From Chronic Conditions to Optimized Wellbeing</h2>
+                        <p class="section-subtitle">
+                           AIVA OS is designed to help you move from a reactive state of managing symptoms to proactively engineering health, targeting the root causes of complex conditions with precise, non-pharmacological interventions.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 max-w-5xl mx-auto mb-20">
+                        <div class="disease-card" data-aos="zoom-in-up"><i data-lucide="activity" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Metabolic Health</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="50"><i data-lucide="droplets" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Diabetes</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="100"><i data-lucide="heart-pulse" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Cardiovascular</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="150"><i data-lucide="shield" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Autoimmune</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="200"><i data-lucide="brain" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Cognitive Focus</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="250"><i data-lucide="trending-up" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Longevity</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="300"><i data-lucide="zap" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Energy & Fatigue</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="350"><i data-lucide="bed-double" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Sleep</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="400"><i data-lucide="leaf" class="mx-auto mb-2 w-7 h-7 accent-text"></i><span class="text-sm font-medium">Gut Health</span></div>
+                        <div class="disease-card" data-aos="zoom-in-up" data-aos-delay="450">
+                            <span class="text-3xl font-bold accent-text">+52</span>
+                            <span class="text-sm font-medium text-gray-400">More Conditions</span>
+                        </div>
+                    </div>
+                     <div class="text-center" data-aos="fade-up">
+                        <h3 class="text-3xl font-bold text-white mb-10">Example Interventions from the Protocol Engine</h3>
+                        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto text-left">
+                            <div>
+                                <div class="flex items-center gap-3 mb-2"><i data-lucide="wind" class="w-5 h-5 accent-text"></i><strong class="text-white">Breathwork</strong></div>
+                                <p class="text-gray-400">Protocols like resonance frequency breathing to directly modulate your nervous system state in real-time.</p>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-3 mb-2"><i data-lucide="clock" class="w-5 h-5 accent-text"></i><strong class="text-white">Food Timing & Sequencing</strong></div>
+                                <p class="text-gray-400">Circadian-aligned eating windows and protocols for food sequencing to blunt glucose spikes and reduce metabolic stress.</p>
+                            </div>
+                             <div>
+                                <div class="flex items-center gap-3 mb-2"><i data-lucide="component" class="w-5 h-5 accent-text"></i><strong class="text-white">Plant Compound Stacks</strong></div>
+                                <p class="text-gray-400">Precisely calculated combinations of adaptogens and nutrients based on their known mechanistic effects on your specific biology.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 8: How it works (Timeline) -->
+            <section id="roadmap" class="py-24 lg:py-40 bg-black">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-20" data-aos="fade-up">
+                        <p class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">The AI Flywheel</p>
+                        <h2 class="section-title text-white mb-6">From Signal to Simulation</h2>
+                        <p class="section-subtitle">
+                           Our platform operates on a continuous, self-reinforcing cycle. Trust fosters data contribution, which enhances the AI, leading to superior biological understandings, which in turn deepens user engagement—a virtuous cycle that is exceptionally difficult to replicate.
+                        </p>
+                    </div>
+                    <div class="timeline">
+                        <div class="timeline-item" data-aos="fade-right">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="text-xl font-bold mb-2 accent-text">1. Signal Path (Real-time Sync)</h3>
+                                <p class="text-gray-400">High-frequency data from wearables (HRV, sleep) streams in, providing a continuous, live view of your physiological state. This answers, "What is happening now?"</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-aos="fade-left">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="text-xl font-bold mb-2 accent-text">2. Upload Path (Deep Calibration)</h3>
+                                <p class="text-gray-400">Periodic, high-fidelity lab data (genomics, etc.) provides ground-truth anchors, calibrating your Digital Twin's foundational parameters. This answers, "What is my terrain?"</p>
+                            </div>
+                        </div>
+                         <div class="timeline-item" data-aos="fade-right">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="text-xl font-bold mb-2 accent-text">3. Causal Simulation (HDT)</h3>
+                                <p class="text-gray-400">The HDT integrates all data into a dynamic simulation, allowing you to ask "what-if" questions and run virtual experiments to predict the effects of interventions on your unique biology.</p>
+                            </div>
+                        </div>
+                         <div class="timeline-item" data-aos="fade-left">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="text-xl font-bold mb-2 accent-text">4. Protocol Engine (Action)</h3>
+                                <p class="text-gray-400">The system calculates precise, non-pharmacological interventions (e.g., breathwork, food timing) designed to modulate your biology toward your desired state, closing the loop.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 9: Contact -->
+            <section id="contact" class="py-24 lg:py-40">
+                <div class="container mx-auto px-6 text-center">
+                    <h2 class="section-title text-white mb-6" data-aos="fade-up">Architect the Future of Health</h2>
+                    <p class="section-subtitle mb-12" data-aos="fade-up" data-aos-delay="100">
+                    AIVA OS is an invitation to visionary investors, world-class scientific talent, and strategic partners to join us in building the foundational operating system for human health. The paradigm shift has begun.
+                    </p>
+                    <div class="max-w-xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                        <form class="flex flex-col sm:flex-row gap-4">
+                            <input type="email" placeholder="your.email@example.com" class="flex-grow bg-gray-900 border border-gray-700 rounded-full px-6 py-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-lg">
+                            <button type="submit" class="cta-button">Join the Waitlist</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="py-12 border-t border-white/10">
+        <div class="container mx-auto px-6 text-center text-gray-500">
+             <div class="flex justify-center items-center space-x-2 mb-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-gray-600">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h1 class="text-lg font-bold text-gray-400">AIVA OS</h1>
+            </div>
+            <p class="text-sm">&copy; 2025 AIVA Intelligence. All rights reserved.</p>
+            <div class="mt-4 space-x-6 text-sm">
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-in-out-quad',
+        });
+
+        lucide.createIcons();
+
+        // --- Mouse position for card hover effect ---
+        document.querySelectorAll('.info-card').forEach(card => {
+            card.onmousemove = e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            }
+        });
+
+        // --- Three.js Hero Animation ---
+        const canvas = document.getElementById('hero-canvas');
+        if (canvas) {
+            let scene, camera, renderer, points;
+            const clock = new THREE.Clock();
+            let mouseX = 0, mouseY = 0;
+            let windowHalfX = window.innerWidth / 2;
+            let windowHalfY = window.innerHeight / 2;
+
+            function init() {
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
+                
+                renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(window.innerWidth, window.innerHeight);
+
+                const geometry = new THREE.BufferGeometry();
+                const numPoints = 10000;
+                const positions = new Float32Array(numPoints * 3);
+                const colors = new Float32Array(numPoints * 3);
+                const color = new THREE.Color();
+
+                for (let i = 0; i < numPoints; i++) {
+                    const i3 = i * 3;
+                    const radius = Math.random() * 400 + 200;
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.acos((Math.random() * 2) - 1);
+
+                    positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+                    positions[i3+1] = radius * Math.sin(phi) * Math.sin(theta);
+                    positions[i3+2] = radius * Math.cos(phi);
+
+                    color.set(Math.random() > 0.9 ? 0xffffff : 0x00A3FF);
+                    colors[i3] = color.r;
+                    colors[i3+1] = color.g;
+                    colors[i3+2] = color.b;
+                }
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+                const material = new THREE.PointsMaterial({
+                    size: 1.2,
+                    vertexColors: true,
+                    blending: THREE.AdditiveBlending,
+                    transparent: true,
+                    opacity: 0.8
+                });
+
+                points = new THREE.Points(geometry, material);
+                scene.add(points);
+
+                document.addEventListener('mousemove', onDocumentMouseMove, false);
+                window.addEventListener('resize', onWindowResize, false);
+            }
+            
+            function onDocumentMouseMove(event) {
+                mouseX = (event.clientX - windowHalfX) / 4;
+                mouseY = (event.clientY - windowHalfY) / 4;
+            }
+
+            function onWindowResize() {
+                windowHalfX = window.innerWidth / 2;
+                windowHalfY = window.innerHeight / 2;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                const delta = clock.getDelta();
+                if(points) {
+                    points.rotation.y += delta * 0.02;
+                    points.rotation.x += delta * 0.005;
+                }
+                camera.position.x += (mouseX - camera.position.x) * 0.05;
+                camera.position.y += (-mouseY - camera.position.y) * 0.05;
+                camera.lookAt(scene.position);
+                renderer.render(scene, camera);
+            }
+
+            init();
+            animate();
+            
+             // GSAP Scroll Animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            camera.position.z = 1000;
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".scroll-content",
+                    start: "top bottom",
+                    end: "top top",
+                    scrub: 1.5,
+                }
+            });
+
+            tl.to(camera.position, { z: 250, ease: "power2.in" });
+              
+            const heroText = document.querySelector(".hero-text-content");
+            gsap.to(heroText, {
+                scrollTrigger: {
+                    trigger: heroText,
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true,
+                },
+                opacity: 0,
+                y: -200
+            });
+
+        }
+    </script>
+</body>
+</html>
